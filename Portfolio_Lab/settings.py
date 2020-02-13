@@ -72,6 +72,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Portfolio_Lab.wsgi.application'
 
+AUTH_USER_MODEL = 'charity_donation.User'
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
