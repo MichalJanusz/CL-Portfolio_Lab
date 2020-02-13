@@ -9,9 +9,9 @@ class Category(models.Model):
 
 
 TYPE_CHOICES = (
-    (1, 'fundacja'),
-    (2, 'organizacja pozarządowa'),
-    (3, 'zbiórka lokalna'),
+    (1, 'Fundacja'),
+    (2, 'Organizacja pozarządowa'),
+    (3, 'Zbiórka lokalna'),
 )
 
 
