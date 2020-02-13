@@ -111,7 +111,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-LOGIN_URL = 'login/'
+LOGIN_URL = '/login'
 
 try:
     from Portfolio_Lab.local_settings import DATABASES
