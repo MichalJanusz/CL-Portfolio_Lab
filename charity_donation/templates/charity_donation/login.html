@@ -1,4 +1,4 @@
-{% extends 'charity_donation/__base__.html' %}
+{% extends 'charity_donation/index.html' %}
 {% block header %}{% endblock %}
 {% block slogan %}{% endblock %}
 {% block content %}
@@ -14,7 +14,7 @@
         </div>
 
         <div class="form-group form-group--buttons">
-          <a href="#" class="btn btn--without-border">Załóż konto</a>      
+          <a href="{% url 'register' %}" class="btn btn--without-border">Załóż konto</a>
           <button class="btn" type="submit">Zaloguj się</button> 
         </div>
       </form>
