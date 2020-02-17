@@ -24,3 +24,7 @@ class RegisterForm(forms.Form):
         if password != re_password:
             raise ValidationError('Hasła są niezgodne!')
 
+
+class LoginForm(forms.Form):
+    email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': 'Email'}), label=False)
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Hasło'}), label=False)
