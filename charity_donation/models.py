@@ -10,17 +10,18 @@ class Category(models.Model):
     name = models.CharField(max_length=128)
 
 
-TYPE_CHOICES = (
-    (1, 'Fundacja'),
-    (2, 'Organizacja pozarządowa'),
-    (3, 'Zbiórka lokalna'),
-)
-
-
 class Institution(models.Model):
+    FOUNDATION = 1
+    ORGANISATION = 2
+    LOCAL = 3
+    TYPE_CHOICES = (
+        (FOUNDATION, 'Fundacja'),
+        (ORGANISATION, 'Organizacja pozarządowa'),
+        (LOCAL, 'Zbiórka lokalna'),
+    )
     name = models.CharField(max_length=128)
     description = models.TextField()
-    type = models.IntegerField(choices=TYPE_CHOICES, default=1)
+    type = models.IntegerField(choices=TYPE_CHOICES, default=FOUNDATION)
     categories = models.ManyToManyField('Category')
 
 

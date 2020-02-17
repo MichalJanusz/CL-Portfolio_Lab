@@ -1,4 +1,5 @@
 from django.contrib.auth import logout, authenticate, login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -21,9 +22,11 @@ class LandingPageView(View):
         return render(request, 'charity_donation/index.html', ctx)
 
 
-class AddDonationView(View):
+class AddDonationView(LoginRequiredMixin, View):
     def get(self, request):
-        return render(request, 'charity_donation/form.html')
+        categories = Category.objects.all()
+        institutions = Institution.objects.all()
+        return render(request, 'charity_donation/form.html', {'categories': categories, 'institutions': institutions})
 
 
 class LoginView(View):
@@ -39,7 +42,8 @@ class LoginView(View):
             user = authenticate(request, username=email, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('main')
+                url = request.GET.get("next") if request.GET.get("next") is not None else 'main'
+                return redirect(url)
 
             else:
                 if len(User.objects.filter(email=email)) > 0:
