@@ -1,15 +1,16 @@
-from django.shortcuts import render
+from django.contrib.auth import logout
+from django.db.models import Sum
+from django.shortcuts import render, redirect
 
+from .forms import *
 from .models import *
 from django.views import View
 
 
 class LandingPageView(View):
     def get(self, request):
-        bags_count = 0
-        donations = Donation.objects.all()
-        for donation in donations:
-            bags_count += donation.quantity
+        bags_agregate = Donation.objects.aggregate(Sum('quantity'))
+        bags_count = bags_agregate['quantity__sum'] if bags_agregate['quantity__sum'] is not None else 0
         institutions_count = len(Institution.objects.all())
         foundations = Institution.objects.filter(type=1)
         organisations = Institution.objects.filter(type=2)
@@ -31,4 +32,20 @@ class LoginView(View):
 
 class RegisterView(View):
     def get(self, request):
-        return render(request, 'charity_donation/register.html')
+        form = RegisterForm()
+        return render(request, 'charity_donation/register.html', {'form': form})
+
+    def post(self, request):
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+
+            user = User.objects.create_user(username=email, email=email, password=password,
+                                            first_name=first_name, last_name=last_name)
+
+            return redirect('login')
+        else:
+            return render(request, 'charity_donation/register.html', {'form': form})
