@@ -1,11 +1,12 @@
-from django.contrib.auth import logout, authenticate, login
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView, LogoutView
 from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-
-from .forms import *
-from .models import *
 from django.views import View
+
+from .forms import LoginForm, RegisterForm, AddDonationForm
+from .models import Donation, Institution, Category, User
 
 
 class LandingPageView(View):
@@ -21,40 +22,20 @@ class LandingPageView(View):
         return render(request, 'charity_donation/index.html', ctx)
 
 
-class AddDonationView(View):
+class AddDonationView(LoginRequiredMixin, View):
     def get(self, request):
-        return render(request, 'charity_donation/form.html')
+        categories = Category.objects.all()
+        institutions = Institution.objects.all()
+        return render(request, 'charity_donation/form.html', {'categories': categories, 'institutions': institutions})
 
 
-class LoginView(View):
-    def get(self, request):
-        form = LoginForm()
-        return render(request, 'charity_donation/login.html', {'form': form})
-
-    def post(self, request):
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            user = authenticate(request, username=email, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect('main')
-
-            else:
-                if len(User.objects.filter(email=email)) > 0:
-                    message = 'Błędne hasło'
-                    return render(request, 'charity_donation/login.html', {'form': form, 'message': message})
-                else:
-                    return redirect('register')
-        else:
-            return render(request, 'charity_donation/login.html', {'form': form})
+class LogInView(LoginView):
+    template_name = 'charity_donation/login.html'
+    authentication_form = LoginForm
 
 
-class LogoutView(View):
-    def get(self, request):
-        logout(request)
-        return redirect('main')
+class LogOutView(LogoutView):
+    pass
 
 
 class RegisterView(View):
@@ -70,7 +51,7 @@ class RegisterView(View):
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
 
-            user = User.objects.create_user(username=email, email=email, password=password,
+            user = User.objects.create_user(email=email, password=password,
                                             first_name=first_name, last_name=last_name)
 
             return redirect('login')

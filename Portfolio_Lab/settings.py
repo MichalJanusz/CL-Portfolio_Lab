@@ -115,6 +115,10 @@ STATIC_URL = '/static/'
 
 LOGIN_URL = '/login'
 
+LOGIN_REDIRECT_URL = '/'
+
+LOGOUT_REDIRECT_URL = '/'
+
 try:
     from Portfolio_Lab.local_settings import DATABASES
 except ModuleNotFoundError:
