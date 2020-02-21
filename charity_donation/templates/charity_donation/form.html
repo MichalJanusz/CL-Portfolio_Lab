@@ -52,25 +52,26 @@
         <div class="form--steps-counter">Krok <span>1</span>/5</div>
 
         <form>
+        {% csrf_token %}
           <!-- STEP 1: class .active is switching steps -->
           <div data-step="1" class="active">
             <h3>Zaznacz co chcesz oddać:</h3>
-
-            {% for category in categories %}
-            <div class="form-group form-group--checkbox">
-              <label>
-                <input
-                  type="checkbox"
-                  name="categories"
-                  value="{{ category.id }}"
-                />
-                <span class="checkbox"></span>
-                <span class="description"
-                  >{{ category.name }}</span
-                >
-              </label>
-            </div>
-            {% endfor %}
+              {{ form.categories }}
+{#            {% for category in form.categories %}#}
+{#            <div class="form-group form-group--checkbox">#}
+{#              <label>#}
+{#                <input#}
+{#                  type="checkbox"#}
+{#                  name="categories"#}
+{#                  value="{{ category }}"#}
+{#                />#}
+{#                <span class="checkbox"></span>#}
+{#                <span class="description"#}
+{#                  >{{ category }}</span#}
+{#                >#}
+{#              </label>#}
+{#            </div>#}
+{#            {% endfor %}#}
 
             <div class="form-group form-group--buttons">
               <button type="button" class="btn next-step first-button">Dalej</button>
@@ -82,10 +83,7 @@
             <h3>Podaj liczbę 60l worków, w które spakowałeś/aś rzeczy:</h3>
 
             <div class="form-group form-group--inline">
-              <label>
-                Liczba 60l worków:
-                <input type="number" name="bags" step="1" min="1" />
-              </label>
+              {{form.quantity}}
             </div>
 
             <div class="form-group form-group--buttons">

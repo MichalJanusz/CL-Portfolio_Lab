@@ -226,7 +226,7 @@ document.addEventListener("DOMContentLoaded", function() {
       this.slides.forEach(slide => {
         slide.classList.remove("active");
 
-        if (slide.dataset.step === this.currentStep) {
+        if (slide.dataset.step == this.currentStep) {
           slide.classList.add("active");
         }
       });
@@ -252,5 +252,4 @@ document.addEventListener("DOMContentLoaded", function() {
   if (form !== null) {
     new FormSteps(form);
   }
-  const institutions = $('')
 });
