@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 
-from .models import User, Donation, Category
+from .models import User, Donation, Category, Institution
 
 
 class RegisterForm(forms.ModelForm):
@@ -25,7 +25,7 @@ class AddDonationForm(forms.Form):
     quantity = forms.IntegerField()
     categories = forms.ModelChoiceField(queryset=Category.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={}),
                                         empty_label=None)
-    # institution = forms.ForeignKey('Institution', on_delete=models.CASCADE)
+    institution = forms.ModelChoiceField(queryset=Institution.objects.all(), widget=forms.RadioSelect(attrs={}))
     address = forms.CharField(max_length=128)
     phone_number = forms.IntegerField()
     city = forms.CharField(max_length=128)
