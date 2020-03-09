@@ -226,15 +226,14 @@ document.addEventListener("DOMContentLoaded", function() {
       this.slides.forEach(slide => {
         slide.classList.remove("active");
 
-        if (slide.dataset.step === this.currentStep) {
+        if (slide.dataset.step == this.currentStep) {
           slide.classList.add("active");
         }
       });
 
-      this.$stepInstructions[0].parentElement.parentElement.hidden = this.currentStep >= 6;
-      this.$step.parentElement.hidden = this.currentStep >= 6;
+      this.$stepInstructions[0].parentElement.parentElement.hidden = this.currentStep >= 5;
+      this.$step.parentElement.hidden = this.currentStep >= 5;
 
-      // TODO: get data from inputs and show them in summary
     }
 
     /**
@@ -243,14 +242,50 @@ document.addEventListener("DOMContentLoaded", function() {
      * TODO: validation, send data to server
      */
     submit(e) {
+      console.log(e);
       e.preventDefault();
       this.currentStep++;
       this.updateForm();
+      $.ajax({
+        url: `/api/donation?quantity=${values.quantity}&address=${values.address}&phone_number=${values.phone_number}&city=${values.city}&zip_code=${values.postcode}&pick_up_date=${values.pick_up_date}&pick_up_time=${values.pick_up_time}&pick_up_comment=${values.pick_up_comment}&category=${values.categories}&institution=${values.institution}`
+      })
+          .done(function (data) {
+            $('.form--steps').html('<h2>\n' +
+                '    Dziękujemy za przesłanie formularza Na maila prześlemy wszelkie\n' +
+                '    informacje o odbiorze.\n' +
+                '</h2>')
+          })
     }
   }
   const form = document.querySelector(".form--steps");
   if (form !== null) {
     new FormSteps(form);
   }
-  const institutions = $('')
+  const values = {};
+  const last_nxt_btn = $('#last-nxt-btn');
+  last_nxt_btn.on('click', function () {
+    $.each($('#donation-form').serializeArray(), function (i, field) {
+      values[field.name] = field.value;
+    });
+    console.log(values);
+    const content = $('#id_categories input[value="'+values.categories+'"]').parent().text();
+    const institution = $('#id_institution input[value="'+values.institution+'"]').parent().text();
+    debugger;
+    $('#count').text(values.quantity);
+    $('#bag_content').text(content);
+    $('#institution').text(institution);
+    $('#street').text(values.address);
+    $('#city').text(values.city);
+    $('#postcode').text(values.postcode);
+    $('#phone_number').text(values.phone_number);
+    $('#date').text(values.pick_up_date);
+    $('#time').text(values.pick_up_time);
+    if (!values.pick_up_comment) {
+      $('#comment').text('Brak uwag');
+    }
+    else {
+      $('#comment').text(values.pick_up_comment);
+    }
+  })
+
 });

@@ -1,9 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.db.models import Sum
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.views import View
+from django.views.generic import FormView
 
 from .forms import LoginForm, RegisterForm, AddDonationForm
 from .models import Donation, Institution, Category, User
@@ -22,11 +23,29 @@ class LandingPageView(View):
         return render(request, 'charity_donation/index.html', ctx)
 
 
-class AddDonationView(LoginRequiredMixin, View):
+class AddDonationView(LoginRequiredMixin, FormView):
+    template_name = 'charity_donation/form.html'
+    form_class = AddDonationForm
+
+
+class AddDonationJSON(View):
     def get(self, request):
-        categories = Category.objects.all()
-        institutions = Institution.objects.all()
-        return render(request, 'charity_donation/form.html', {'categories': categories, 'institutions': institutions})
+        quantity = request.GET.get('quantity')
+        address = request.GET.get('address')
+        phone_number = request.GET.get('phone_number')
+        city = request.GET.get('city')
+        zip_code = request.GET.get('zip_code')
+        pick_up_date = request.GET.get('pick_up_date')
+        pick_up_time = request.GET.get('pick_up_time')
+        pick_up_comment = request.GET.get('pick_up_comment')
+        institution = request.GET.get('institution')
+        category = request.GET.get('category')
+        donation = Donation.objects.create(quantity=quantity, address=address, phone_number=phone_number, city=city,
+                                           zip_code=zip_code, pick_up_date=pick_up_date, pick_up_time=pick_up_time,
+                                           pick_up_comment=pick_up_comment, institution_id=institution,
+                                           user_id=request.user.id)
+        donation.categories.add(category)
+        return JsonResponse({'worked': True})
 
 
 class LogInView(LoginView):
