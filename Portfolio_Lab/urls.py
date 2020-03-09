@@ -25,5 +25,6 @@ urlpatterns = [
     path('login/', LogInView.as_view(), name='login'),
     path('register/', RegisterView.as_view(), name='register'),
     path('logout/', LogOutView.as_view(), name='logout'),
+    path('api/donation', AddDonationJSON.as_view(), name='donation_api'),
 
 ]

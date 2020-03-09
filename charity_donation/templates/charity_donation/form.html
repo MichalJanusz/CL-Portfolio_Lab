@@ -50,8 +50,9 @@
 
       <div class="form--steps-container">
         <div class="form--steps-counter">Krok <span>1</span>/5</div>
+      {{ form.errors }}
 
-        <form>
+        <form method="post" id="donation-form">
         {% csrf_token %}
           <!-- STEP 1: class .active is switching steps -->
           <div data-step="1" class="active">
@@ -94,12 +95,13 @@
 
 
 
-          <!-- STEP 4 -->
+          <!-- STEP 3 -->
           <div data-step="3">
             <h3>Wybierz organizacje, której chcesz pomóc:</h3>
+              {{ form.institution }}
 
-            {% for institution in institutions %}
-            <div class="form-group form-group--checkbox" style="display: none;">
+            <!-- {% for institution in institutions %}
+            <div class="form-group form-group--checkbox" style="{#display: none;#}">
               <label>
                 <input type="radio" name="organization" value="{{ institution.id }}"
                        class="{% for category in institution.categories.all  %}{{ category.id }} {% endfor %}"/>
@@ -113,6 +115,7 @@
               </label>
             </div>
             {% endfor %}
+              -->
 
             <div class="form-group form-group--buttons">
               <button type="button" class="btn prev-step">Wstecz</button>
@@ -120,7 +123,7 @@
             </div>
           </div>
 
-          <!-- STEP 5 -->
+          <!-- STEP 4 -->
           <div data-step="4">
             <h3>Podaj adres oraz termin odbioru rzecz przez kuriera:</h3>
 
@@ -128,51 +131,44 @@
               <div class="form-section--column">
                 <h4>Adres odbioru</h4>
                 <div class="form-group form-group--inline">
-                  <label> Ulica <input type="text" name="address" /> </label>
+                  <label>{{ form.address.label }} {{ form.address }} </label>
                 </div>
 
                 <div class="form-group form-group--inline">
-                  <label> Miasto <input type="text" name="city" /> </label>
+                  <label> {{ form.city.label}} {{ form.city }} </label>
                 </div>
 
                 <div class="form-group form-group--inline">
-                  <label>
-                    Kod pocztowy <input type="text" name="postcode" />
-                  </label>
+                  <label> {{ form.postcode.label}} {{ form.postcode }} </label>
                 </div>
 
                 <div class="form-group form-group--inline">
-                  <label>
-                    Numer telefonu <input type="phone" name="phone" />
-                  </label>
+                  <label> {{ form.phone_number.label}} {{ form.phone_number }} </label>
                 </div>
               </div>
 
               <div class="form-section--column">
                 <h4>Termin odbioru</h4>
                 <div class="form-group form-group--inline">
-                  <label> Data <input type="date" name="data" /> </label>
+                  <label> {{ form.pick_up_date.label}} {{ form.pick_up_date }} </label>
                 </div>
 
                 <div class="form-group form-group--inline">
-                  <label> Godzina <input type="time" name="time" /> </label>
+                  <label> {{ form.pick_up_time.label}} {{ form.pick_up_time }} </label>
                 </div>
 
                 <div class="form-group form-group--inline">
-                  <label>
-                    Uwagi dla kuriera
-                    <textarea name="more_info" rows="5"></textarea>
-                  </label>
+                  <label> {{ form.pick_up_comment.label}} {{ form.pick_up_comment }} </label>
                 </div>
               </div>
             </div>
             <div class="form-group form-group--buttons">
               <button type="button" class="btn prev-step">Wstecz</button>
-              <button type="button" class="btn next-step">Dalej</button>
+              <button id="last-nxt-btn" type="button" class="btn next-step">Dalej</button>
             </div>
           </div>
 
-          <!-- STEP 6 -->
+          <!-- STEP 5 -->
           <div data-step="5">
             <h3>Podsumowanie Twojej darowizny</h3>
 
@@ -182,16 +178,16 @@
                 <ul>
                   <li>
                     <span class="icon icon-bag"></span>
-                    <span class="summary--text"
-                      >4 worki ubrań w dobrym stanie dla dzieci</span
-                    >
+                    <span class="summary--text">
+                      <span id="count"></span> worki zawierające: <span id="bag_content"></span>
+                    </span>
                   </li>
 
                   <li>
                     <span class="icon icon-hand"></span>
-                    <span class="summary--text"
-                      >Dla fundacji "Mam marzenie" w Warszawie</span
-                    >
+                    <span class="summary--text">
+                      Dla Fundacji "<span id="institution"></span>"
+                    </span>
                   </li>
                 </ul>
               </div>
@@ -200,19 +196,19 @@
                 <div class="form-section--column">
                   <h4>Adres odbioru:</h4>
                   <ul>
-                    <li>Prosta 51</li>
-                    <li>Warszawa</li>
-                    <li>99-098</li>
-                    <li>123 456 789</li>
+                    <li id="street"></li>
+                    <li id="city"></li>
+                    <li id="postcode"></li>
+                    <li id="phone_number"></li>
                   </ul>
                 </div>
 
                 <div class="form-section--column">
                   <h4>Termin odbioru:</h4>
                   <ul>
-                    <li>13/12/2018</li>
-                    <li>15:40</li>
-                    <li>Brak uwag</li>
+                    <li id="date"></li>
+                    <li id="time"></li>
+                    <li id="comment"></li>
                   </ul>
                 </div>
               </div>
