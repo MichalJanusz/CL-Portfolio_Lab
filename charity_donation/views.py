@@ -14,7 +14,7 @@ class LandingPageView(View):
     def get(self, request):
         bags_agregate = Donation.objects.aggregate(Sum('quantity'))
         bags_count = bags_agregate['quantity__sum'] if bags_agregate['quantity__sum'] is not None else 0
-        institutions_count = len(Institution.objects.all())
+        institutions_count = Institution.objects.count()
         foundations = Institution.objects.filter(type=1)
         organisations = Institution.objects.filter(type=2)
         local_collections = Institution.objects.filter(type=3)
